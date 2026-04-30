@@ -1181,7 +1181,7 @@
                             <span class="material-symbols-rounded" style="font-size: 18px;">radio</span>
                             No Ar Agora
                         </div>
-                        <div class="song-title" id="current-song">Carregando...</div>
+                        <div class="song-title" id="current-song">🎙️ Estúdio Ao Vivo</div>
                         <div class="program-title" id="current-program">Programação Nativa FM</div>
                     </div>
 
@@ -1577,29 +1577,25 @@
         updateSchedule();
         setInterval(updateSchedule, 60000); // Atualiza a cada minuto
 
-        // Simulação de música tocando (como Web Rádios costumam buscar de APIs)
-        const dummySongs = [
-            "Gusttavo Lima - Termina Comigo Antes",
-            "Marília Mendonça - Leão",
-            "Jorge & Mateus - Todo Seu",
-            "Henrique & Juliano - Arranhão",
-            "Maiara & Maraisa - A Culpa é Nossa",
-            "Luan Santana - Coração Cigano",
-            "Simone Mendes - Erro Gostoso"
-        ];
-        
-        function rotateSongs() {
+        // --- SISTEMA AGORA TOCANDO (REAL) ---
+        function updateNowPlaying() {
             const songEl = document.getElementById('current-song');
-            const randomSong = dummySongs[Math.floor(Math.random() * dummySongs.length)];
-            songEl.style.opacity = 0;
-            setTimeout(() => {
-                songEl.textContent = randomSong;
-                songEl.style.opacity = 1;
-            }, 500);
+
+            try {
+                let metadata = audioEl?.dataset?.title;
+
+                if (metadata && metadata.trim() !== '') {
+                    songEl.textContent = metadata;
+                } else {
+                    songEl.textContent = "🎙️ Estúdio Ao Vivo";
+                }
+            } catch (e) {
+                songEl.textContent = "🎙️ Estúdio Ao Vivo";
+            }
         }
-        
-        rotateSongs();
-        setInterval(rotateSongs, 120000); // Troca música a cada 2 min para simulação
+
+        setInterval(updateNowPlaying, 10000);
+        updateNowPlaying();
 
         // --- SISTEMA DE ÁUDIO E WEB AUDIO API ---
         const audioEl = document.getElementById('radio-stream');
@@ -1654,7 +1650,7 @@
             }
         }
 
-        // --- CONTROLES DE PLAY/PAUSE/STOP ---
+        // --- CONTROLES DE PLAY/PAUSE/STOP (CORRIGIDOS) ---
         async function togglePlay() {
             if (audioCtx && audioCtx.state === 'suspended') {
                 await audioCtx.resume();
@@ -1662,17 +1658,20 @@
 
             if (!isPlaying) {
                 if (!isAudioSetup) setupAudio();
-                
-                audioEl.play().then(() => {
+
+                // Reatribui a URL do streaming (nova conexão)
+                audioEl.src = "http://stream.zeno.fm/emcg0pkcf4hvv";
+                audioEl.load();
+
+                await audioEl.play().then(() => {
                     isPlaying = true;
                     btnPlay.classList.add('playing');
                     playIcon.textContent = 'pause';
                     statusMsg.style.display = 'none';
-                }).catch(err => {
-                    console.error("Erro ao reproduzir:", err);
+                }).catch(() => {
                     statusMsg.style.display = 'block';
-                    statusMsg.textContent = "Clique novamente para confirmar a reprodução (Proteção do Navegador).";
                 });
+
             } else {
                 audioEl.pause();
                 isPlaying = false;
@@ -1683,12 +1682,16 @@
 
         function stopAudio() {
             audioEl.pause();
-            audioEl.currentTime = 0;
-            // Para forçar o recarregamento do streaming ao dar play novamente
-            audioEl.src = audioEl.src; 
+
+            // Remove a fonte completamente
+            audioEl.removeAttribute('src');
+            audioEl.load();
+
             isPlaying = false;
+
             btnPlay.classList.remove('playing');
             playIcon.textContent = 'play_arrow';
+
             resetVU();
         }
 
