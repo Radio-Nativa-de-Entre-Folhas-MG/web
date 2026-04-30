@@ -4,18 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nativa FM - O amor de Entre Folhas</title>
+    
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Ícones (Material Symbols) -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+
     <style>
+        /* ==========================================================================
+           1. VARIÁVEIS E CONFIGURAÇÕES GERAIS
+           ========================================================================== */
         :root {
-            --bg-color: #0d0f13;
-            --surface-color: #1a1d24;
-            --primary-color: #00ff88;
-            --primary-glow: rgba(0, 255, 136, 0.4);
-            --danger-color: #ff3366;
-            --warning-color: #ffcc00;
-            --text-main: #ffffff;
-            --text-secondary: #8e95a5;
-            --led-off: #2a2d35;
-            --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --color-bg: #0d0d0d;
+            --color-surface: #1a1a1a;
+            --color-surface-light: #262626;
+            --color-primary: #00E676; /* Verde Destaque */
+            --color-primary-dark: #00b35c;
+            --color-secondary: #007BFF; /* Azul Secundário */
+            --color-text: #f5f5f5;
+            --color-text-muted: #a0a0a0;
+            --color-border: rgba(255, 255, 255, 0.08);
+            
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'Poppins', sans-serif;
+            
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-pill: 50px;
+            
+            --glow-primary: 0 0 20px rgba(0, 230, 118, 0.3);
+            --glow-secondary: 0 0 20px rgba(0, 123, 255, 0.3);
+            
+            --container-width: 1200px;
         }
 
         * {
@@ -25,719 +50,1753 @@
         }
 
         body {
-            font-family: var(--font-family);
-            background: linear-gradient(135deg, var(--bg-color) 0%, #161a22 100%);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
             overflow-x: hidden;
-            position: relative;
+            scroll-behavior: smooth;
         }
 
-        /* Background Animation */
-        .bg-animation {
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--color-text);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
             position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), transparent);
+            border-radius: var(--radius-pill);
+        }
+
+        .section-subtitle {
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 48px;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        /* ==========================================================================
+           2. HEADER E NAVEGAÇÃO
+           ========================================================================== */
+        header {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-            pointer-events: none;
+            background: rgba(13, 13, 13, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+            transition: var(--transition);
         }
 
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            animation: float 20s infinite ease-in-out;
+        header.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            padding: 5px 0;
         }
 
-        .bg-circle:nth-child(1) {
-            width: 400px;
-            height: 400px;
-            background: var(--primary-color);
-            top: -100px;
-            left: -100px;
-        }
-
-        .bg-circle:nth-child(2) {
-            width: 500px;
-            height: 500px;
-            background: var(--danger-color);
-            bottom: -150px;
-            right: -100px;
-            animation-delay: -5s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -50px) scale(1.1); }
-            66% { transform: translate(-30px, 30px) scale(0.9); }
-        }
-
-        /* App Container */
-        .app-container {
-            position: relative;
-            z-index: 1;
-            background: var(--surface-color);
-            width: 100%;
-            max-width: 480px;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        /* Header */
-        .header {
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding-bottom: 15px;
+            height: 90px;
+            transition: var(--transition);
+        }
+
+        header.scrolled .header-content {
+            height: 70px;
+        }
+
+        .logo-container img {
+            height: 50px;
+            object-fit: contain;
+            transition: var(--transition);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-muted);
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--color-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .live-indicator {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
             font-weight: 700;
+            color: #ff3b3b;
+            text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--danger-color);
-            background: rgba(255, 51, 102, 0.1);
-            padding: 5px 12px;
-            border-radius: 20px;
+            background: rgba(255, 59, 59, 0.1);
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255, 59, 59, 0.2);
         }
 
-        .pulse {
-            width: 8px;
-            height: 8px;
-            background-color: var(--danger-color);
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #ff3b3b;
             border-radius: 50%;
-            animation: blink 1.5s infinite;
+            animation: pulse-red 1.5s infinite;
         }
 
-        @keyframes blink {
-            0% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.7); }
-            70% { opacity: 0.5; box-shadow: 0 0 0 6px rgba(255, 51, 102, 0); }
-            100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 59, 59, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
         }
 
-        .clock {
+        .btn-listen {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+            color: #000;
+            padding: 12px 24px;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-heading);
+            font-weight: 700;
             font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-variant-numeric: tabular-nums;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--glow-primary);
+            border: none;
+            cursor: pointer;
         }
 
-        /* Radio Info */
-        .radio-info {
-            text-align: center;
+        .btn-listen:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(0, 230, 118, 0.5);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* ==========================================================================
+           3. HERO E PLAYER AVANÇADO
+           ========================================================================== */
+        .hero {
+            position: relative;
+            padding-top: 150px;
+            padding-bottom: 80px;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            background: radial-gradient(circle at 70% 30%, rgba(0, 123, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 30% 70%, rgba(0, 230, 118, 0.08) 0%, transparent 50%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+            opacity: 0.02;
+            pointer-events: none;
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .hero-logo img {
+            max-width: 280px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        }
+
+        .hero-slogan {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #fff, var(--color-text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            max-width: 90%;
+        }
+
+        /* --- Interface do Player --- */
+        .player-card {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .now-playing-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 20px;
+        }
+
+        .now-playing-label {
+            font-size: 0.85rem;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .song-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .program-title {
+            font-size: 1rem;
+            color: var(--color-secondary);
+            font-weight: 500;
+        }
+
+        .player-controls-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .btn-play-pause {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            cursor: pointer;
+            box-shadow: var(--glow-primary);
+            transition: var(--transition);
+        }
+
+        .btn-play-pause:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.6);
+        }
+
+        .btn-play-pause .material-symbols-rounded {
+            font-size: 36px;
+            margin-left: 4px; /* Ajuste óptico para o ícone de play */
+            transition: var(--transition);
+        }
+
+        .btn-play-pause.playing .material-symbols-rounded {
+            margin-left: 0;
+        }
+
+        .btn-stop {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--color-surface-light);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-stop:hover {
+            background: rgba(255, 59, 59, 0.2);
+            color: #ff3b3b;
+            border-color: rgba(255, 59, 59, 0.4);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 16px;
+            border-radius: var(--radius-pill);
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--color-surface-light);
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-text);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transition: var(--transition);
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            background: var(--color-primary);
+            transform: scale(1.2);
+        }
+
+        /* --- Equalizador e VU Meter --- */
+        .visualizer-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .spectrum-canvas {
+            width: 100%;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--color-border);
+        }
+
+        .vu-meters {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
 
-        .radio-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, #fff, var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
+        .vu-channel {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .radio-slogan {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            font-style: italic;
+        .vu-label {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            font-weight: 700;
+            width: 15px;
         }
 
-        .status-text {
+        .vu-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .vu-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-primary) 0%, #ffff00 70%, #ff3b3b 100%);
+            transition: width 0.05s ease-out;
+            box-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
+        }
+
+        #audio-status-msg {
             font-size: 0.85rem;
-            color: var(--primary-color);
-            margin-top: 5px;
-            font-weight: 500;
+            color: #ffc107;
+            text-align: center;
+            display: none;
+            margin-top: 10px;
         }
 
-        /* VU Meter Container */
-        .vu-container {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 16px;
+        /* ==========================================================================
+           4. SEÇÃO SOBRE A RÁDIO
+           ========================================================================== */
+        .about-section {
+            background-color: var(--color-surface);
+            position: relative;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+        }
+
+        .about-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            background: var(--color-surface-light);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            color: var(--color-primary);
+            margin-bottom: 16px;
+        }
+
+        .feature-item h3 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .feature-item p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .about-image {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .about-image::before {
+            content: '';
+            display: block;
+            padding-top: 100%;
+        }
+
+        .about-image-inner {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #11998e, #38ef7d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.8;
+        }
+
+        .about-image-inner img {
+            width: 60%;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        }
+
+        /* ==========================================================================
+           5. PROGRAMAÇÃO
+           ========================================================================== */
+        .schedule-section {
+            background-color: var(--color-bg);
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .schedule-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 30px 24px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .schedule-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--color-secondary);
+            transition: var(--transition);
+        }
+
+        .schedule-card:hover {
+            transform: translateY(-5px);
+            background: var(--color-surface-light);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .schedule-card:hover::before {
+            width: 100%;
+            opacity: 0.05;
+        }
+
+        .schedule-card.active {
+            border-color: var(--color-primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .schedule-card.active::before {
+            background: var(--color-primary);
+        }
+
+        .schedule-time {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-text);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .schedule-card.active .schedule-time {
+            color: var(--color-primary);
+        }
+
+        .schedule-badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            background: rgba(0, 230, 118, 0.2);
+            color: var(--color-primary);
+            border-radius: var(--radius-pill);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .schedule-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+
+        .schedule-card.active .schedule-name {
+            color: #fff;
+        }
+
+        /* ==========================================================================
+           6. INTEGRAÇÃO RADIOSNET & APPS
+           ========================================================================== */
+        .apps-section {
+            background: linear-gradient(135deg, var(--color-surface), #0f171e);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            padding: 80px 0;
+        }
+
+        .apps-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 40px 60px;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .apps-text h2 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .apps-text p {
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .apps-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .app-btn {
+            display: flex;
+            align-items: center;
+            background: #000;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 10px 20px;
+            color: #fff;
+            transition: var(--transition);
+            min-width: 180px;
+        }
+
+        .app-btn:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 5px 15px rgba(0, 230, 118, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .app-btn-icon {
+            font-size: 32px;
+            margin-right: 12px;
+        }
+
+        .app-btn-text {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
         }
 
-        .channel {
+        .app-btn-text span:first-child {
+            font-size: 0.7rem;
+            color: #ccc;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .app-btn-text span:last-child {
+            font-size: 1.2rem;
+            font-weight: 600;
+            line-height: 1;
+            font-family: var(--font-heading);
+        }
+
+        .radiosnet-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .radiosnet-logo {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255,255,255,0.3);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .channel-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            width: 15px;
+        .radiosnet-logo .material-symbols-rounded {
+            font-size: 40px;
+            color: #ff9800;
         }
 
-        .led-strip {
+        /* ==========================================================================
+           7. PUBLICIDADE
+           ========================================================================== */
+        .ad-section {
+            padding: 40px 0;
+            background: var(--color-bg);
+            text-align: center;
+        }
+
+        .ad-banner {
+            display: inline-block;
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            background: var(--color-surface);
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: var(--radius-sm);
+            line-height: 90px;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-banner::before {
+            content: 'Espaço Publicitário';
+        }
+
+        /* ==========================================================================
+           8. CONTATO
+           ========================================================================== */
+        .contact-section {
+            background-color: var(--color-surface);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+        }
+
+        .contact-info {
             display: flex;
-            gap: 4px;
-            flex: 1;
+            flex-direction: column;
+            gap: 30px;
         }
 
-        .led {
-            flex: 1;
-            height: 12px;
-            background-color: var(--led-off);
-            border-radius: 2px;
-            transition: background-color 0.05s ease, box-shadow 0.05s ease;
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
         }
 
-        /* Controls */
-        .controls {
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 123, 255, 0.1);
+            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
+            color: var(--color-secondary);
+            font-size: 24px;
+        }
+
+        .contact-details h4 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .contact-details p {
+            color: var(--color-text-muted);
+        }
+
+        .contact-form {
+            background: var(--color-surface-light);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
             gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 16px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+            background: rgba(0,0,0,0.5);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .btn-submit {
+            background: var(--color-primary);
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
             margin-top: 10px;
         }
 
-        .btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            outline: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
+        .btn-submit:hover {
+            background: var(--color-primary-dark);
+            box-shadow: var(--glow-primary);
+            transform: translateY(-2px);
         }
 
-        .btn-play {
-            width: 64px;
-            height: 64px;
-            background: var(--primary-color);
-            color: var(--bg-color);
-            box-shadow: 0 0 20px var(--primary-glow);
+        /* ==========================================================================
+           9. RODAPÉ
+           ========================================================================== */
+        footer {
+            background-color: #050505;
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        .btn-play:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px var(--primary-glow);
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
         }
 
-        .btn-play svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-            margin-left: 4px; /* Optical alignment */
+        .footer-logo img {
+            max-width: 200px;
+            margin-bottom: 24px;
         }
 
-        .btn-stop {
-            width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
+        .footer-about {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            max-width: 400px;
         }
 
-        .btn-stop:hover {
-            background: rgba(255, 51, 102, 0.2);
-            color: var(--danger-color);
+        .footer-title {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 24px;
+            font-weight: 600;
         }
 
-        .btn-stop svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-
-        .btn.active-state {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        /* Volume Control */
-        .volume-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 12px 20px;
-            border-radius: 12px;
-        }
-
-        .volume-icon {
-            color: var(--text-secondary);
-            width: 20px;
-            height: 20px;
-        }
-
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-
-        input[type=range]:focus {
-            outline: none;
-        }
-
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 6px;
-            cursor: pointer;
-            background: var(--led-off);
-            border-radius: 3px;
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            height: 16px;
-            width: 16px;
-            border-radius: 50%;
-            background: var(--text-main);
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            transition: transform 0.1s;
-        }
-
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        /* Overlay / Fallback */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(13, 15, 19, 0.9);
-            backdrop-filter: blur(5px);
-            border-radius: 24px;
+        .footer-links {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            transition: var(--transition);
+            display: flex;
             align-items: center;
-            z-index: 10;
-            text-align: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            gap: 8px;
         }
 
-        .overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .overlay-icon {
-            width: 60px;
-            height: 60px;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            animation: pulse-icon 2s infinite;
-        }
-
-        @keyframes pulse-icon {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .overlay-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .overlay-text {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 25px;
-        }
-
-        .btn-start {
-            background: var(--primary-color);
-            color: var(--bg-color);
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
+        .footer-links a::before {
+            content: '›';
+            color: var(--color-primary);
+            font-size: 1.2rem;
             font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 0 15px var(--primary-glow);
-            transition: transform 0.2s;
         }
 
-        .btn-start:hover {
-            transform: scale(1.05);
+        .footer-links a:hover {
+            color: var(--color-primary);
+            transform: translateX(5px);
         }
 
-        /* Responsive */
-        @media (max-width: 500px) {
-            .app-container {
-                min-height: 100vh;
-                border-radius: 0;
-                justify-content: center;
-                padding: 20px;
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+        }
+
+        /* ==========================================================================
+           10. RESPONSIVIDADE
+           ========================================================================== */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
             }
-            .overlay {
-                border-radius: 0;
+            
+            .hero-content {
+                align-items: center;
+            }
+
+            .hero-description {
+                max-width: 100%;
+            }
+
+            .player-card {
+                margin-top: 40px;
+            }
+
+            .about-grid, .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-image {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .apps-container {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 90px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 90px);
+                background: var(--color-bg);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: var(--transition);
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.5rem;
+            }
+
+            .header-actions {
+                display: none;
+            }
+
+            header.scrolled .nav-links {
+                top: 70px;
+                height: calc(100vh - 70px);
+            }
+
+            .hero-slogan {
+                font-size: 1.8rem;
+            }
+
+            .player-controls-wrapper {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .volume-control {
+                width: 100%;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .footer-logo img {
+                margin: 0 auto 24px;
+            }
+
+            .footer-about {
+                margin: 0 auto;
+            }
+
+            .apps-buttons {
+                flex-direction: column;
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-animation">
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-    </div>
+    <!-- ==========================================================================
+         HEADER
+         ========================================================================== -->
+    <header id="header">
+        <div class="container header-content">
+            <a href="#" class="logo-container">
+                <img src="NATIVAFM.png" alt="Nativa FM Logo">
+            </a>
+            
+            <nav>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#programacao">Programação</a></li>
+                    <li><a href="#radiosnet">Aplicativo</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
 
-    <div class="app-container">
-        <!-- Autoplay Fallback Overlay -->
-        <div class="overlay" id="interaction-overlay">
-            <svg class="overlay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polygon points="10 8 16 12 10 16 10 8"></polygon>
-            </svg>
-            <h2 class="overlay-title">Bem-vindo à Nativa FM</h2>
-            <p class="overlay-text">Clique no botão abaixo para sintonizar e liberar o áudio.</p>
-            <button class="btn-start" onclick="handleUserInteraction()">Sintonizar Agora</button>
+            <div class="header-actions">
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    Ao Vivo
+                </div>
+                <button class="btn-listen" onclick="togglePlay()">
+                    <span class="material-symbols-rounded">headphones</span>
+                    Ouvir Agora
+                </button>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <span class="material-symbols-rounded">menu</span>
+            </button>
         </div>
+    </header>
 
-        <header class="header">
-            <div class="live-indicator">
-                <div class="pulse" id="pulse-dot"></div>
-                <span id="live-text">OFFLINE</span>
-            </div>
-            <div class="clock" id="digital-clock">00:00:00</div>
-        </header>
-
-        <section class="radio-info">
-            <h1 class="radio-title">Nativa FM</h1>
-            <p class="radio-slogan">"O amor de Entre Folhas"</p>
-            <p class="status-text" id="stream-status">Carregando player...</p>
-        </section>
-
-        <!-- Stereo VU Meter -->
-        <section class="vu-container">
-            <div class="channel">
-                <span class="channel-label">L</span>
-                <div class="led-strip" id="vu-l">
-                    <!-- LEDs generated via JS -->
+    <main>
+        <!-- ==========================================================================
+             HERO & PLAYER
+             ========================================================================== -->
+        <section id="home" class="hero">
+            <div class="container hero-container">
+                
+                <div class="hero-content">
+                    <div class="hero-logo">
+                        <img src="NATIVAFM.png" alt="Nativa FM">
+                    </div>
+                    <h1 class="hero-slogan">O amor de Entre Folhas</h1>
+                    <p class="hero-description">A rádio que toca o seu coração. Qualidade, entretenimento e a melhor programação musical 24 horas por dia, direto para você.</p>
                 </div>
-            </div>
-            <div class="channel">
-                <span class="channel-label">R</span>
-                <div class="led-strip" id="vu-r">
-                    <!-- LEDs generated via JS -->
+
+                <div class="player-card">
+                    <div class="now-playing-info">
+                        <div class="now-playing-label">
+                            <span class="material-symbols-rounded" style="font-size: 18px;">radio</span>
+                            No Ar Agora
+                        </div>
+                        <div class="song-title" id="current-song">Carregando...</div>
+                        <div class="program-title" id="current-program">Programação Nativa FM</div>
+                    </div>
+
+                    <div class="player-controls-wrapper">
+                        <button class="btn-play-pause" id="btn-play" onclick="togglePlay()">
+                            <span class="material-symbols-rounded" id="play-icon">play_arrow</span>
+                        </button>
+                        
+                        <button class="btn-stop" onclick="stopAudio()" title="Parar">
+                            <span class="material-symbols-rounded">stop</span>
+                        </button>
+
+                        <div class="volume-control">
+                            <span class="material-symbols-rounded" style="color: var(--color-text-muted)">volume_down</span>
+                            <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="80">
+                            <span class="material-symbols-rounded" style="color: var(--color-text-muted)">volume_up</span>
+                        </div>
+                    </div>
+
+                    <div class="visualizer-container">
+                        <!-- Spectrum Equalizer -->
+                        <canvas id="spectrum" class="spectrum-canvas"></canvas>
+                        
+                        <!-- Estéreo VU Meter -->
+                        <div class="vu-meters">
+                            <div class="vu-channel">
+                                <span class="vu-label">L</span>
+                                <div class="vu-bar-bg"><div class="vu-bar-fill" id="vu-l"></div></div>
+                            </div>
+                            <div class="vu-channel">
+                                <span class="vu-label">R</span>
+                                <div class="vu-bar-bg"><div class="vu-bar-fill" id="vu-r"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="audio-status-msg">Clique em play para iniciar o áudio.</div>
                 </div>
+
             </div>
         </section>
 
-        <section class="controls">
-            <button class="btn btn-play" id="btn-play" onclick="playAudio()" aria-label="Play">
-                <svg viewBox="0 0 24 24">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-            </button>
-            <button class="btn btn-stop" id="btn-stop" onclick="stopAudio()" aria-label="Stop">
-                <svg viewBox="0 0 24 24">
-                    <rect x="6" y="6" width="12" height="12"></rect>
-                </svg>
-            </button>
-        </section>
-
-        <section class="volume-container">
-            <svg class="volume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            </svg>
-            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8">
-        </section>
-
-        <!-- Hidden Audio Element -->
-        <audio id="radio-player" crossorigin="anonymous">
+        <!-- Elemento de Áudio Oculto -->
+        <audio id="radio-stream" crossorigin="anonymous" preload="none">
             <source src="http://stream.zeno.fm/emcg0pkcf4hvv" type="audio/mpeg">
             Seu navegador não suporta o elemento de áudio.
         </audio>
-    </div>
 
+        <!-- ==========================================================================
+             SOBRE
+             ========================================================================== -->
+        <section id="sobre" class="about-section">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h2 class="section-title">Sobre a Nativa FM</h2>
+                        <p class="section-subtitle">Conectando pessoas através da música e informação.</p>
+                        
+                        <p>A Nativa FM nasceu com o propósito de ser a trilha sonora diária da nossa comunidade. Transmitindo com tecnologia de ponta e uma curadoria musical impecável, nós entregamos o melhor do entretenimento.</p>
+                        <p>Mais do que uma rádio, somos uma família. Nosso compromisso é com a qualidade da informação, o apoio cultural e, claro, muito amor em cada batida que ecoa pelos nossos transmissores e servidores de streaming.</p>
+
+                        <div class="about-features">
+                            <div class="feature-item">
+                                <span class="material-symbols-rounded feature-icon">high_quality</span>
+                                <h3>Áudio HD</h3>
+                                <p>Streaming com qualidade digital cristalina.</p>
+                            </div>
+                            <div class="feature-item">
+                                <span class="material-symbols-rounded feature-icon">schedule</span>
+                                <h3>24 Horas</h3>
+                                <p>Música e informação sem interrupções.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-image">
+                        <div class="about-image-inner">
+                            <!-- Utilizamos o logo como elemento visual estético na seção sobre -->
+                            <img src="NATIVAFM.png" alt="Nativa FM Marca">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             PROGRAMAÇÃO
+             ========================================================================== -->
+        <section id="programacao" class="schedule-section">
+            <div class="container">
+                <div style="text-align: center;">
+                    <h2 class="section-title">Nossa Programação</h2>
+                    <p class="section-subtitle">Acompanhe os melhores programas do seu dia.</p>
+                </div>
+
+                <div class="schedule-grid" id="schedule-container">
+                    <!-- Cards gerados via JS para gerenciar o estado 'active' -->
+                    <div class="schedule-card" data-start="06" data-end="09">
+                        <div class="schedule-time">
+                            06:00 <span class="material-symbols-rounded">routine</span>
+                        </div>
+                        <div class="schedule-name">Manhã Musical</div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 10px;">Desperte com os maiores sucessos para começar bem o dia.</p>
+                    </div>
+
+                    <div class="schedule-card" data-start="09" data-end="12">
+                        <div class="schedule-time">
+                            09:00 <span class="material-symbols-rounded">wb_sunny</span>
+                        </div>
+                        <div class="schedule-name">Show do Amor</div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 10px;">Mensagens, reflexões e as melhores músicas românticas.</p>
+                    </div>
+
+                    <div class="schedule-card" data-start="12" data-end="15">
+                        <div class="schedule-time">
+                            12:00 <span class="material-symbols-rounded">star</span>
+                        </div>
+                        <div class="schedule-name">Top Hits</div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 10px;">As músicas mais pedidas da semana em uma sequência imperdível.</p>
+                    </div>
+
+                    <div class="schedule-card" data-start="15" data-end="18">
+                        <div class="schedule-time">
+                            15:00 <span class="material-symbols-rounded">music_note</span>
+                        </div>
+                        <div class="schedule-name">Tarde Sertaneja</div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 10px;">O melhor do sertanejo raiz e universitário.</p>
+                    </div>
+
+                    <div class="schedule-card" data-start="18" data-end="20">
+                        <div class="schedule-time">
+                            18:00 <span class="material-symbols-rounded">record_voice_over</span>
+                        </div>
+                        <div class="schedule-name">Hora do Ouvinte</div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 10px;">Você no comando! Peça sua música e participe ao vivo.</p>
+                    </div>
+
+                    <div class="schedule-card" data-start="20" data-end="22">
+                        <div class="schedule-time">
+                            20:00 <span class="material-symbols-rounded">favorite</span>
+                        </div>
+                        <div class="schedule-name">Love Songs</div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 10px;">A trilha sonora perfeita para embalar os corações apaixonados.</p>
+                    </div>
+
+                    <div class="schedule-card" data-start="22" data-end="06">
+                        <div class="schedule-time">
+                            22:00 <span class="material-symbols-rounded">bedtime</span>
+                        </div>
+                        <div class="schedule-name">Madrugada Relax</div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 10px;">Músicas suaves para uma noite tranquila de sono.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             INTEGRAÇÃO RADIOSNET E APPS
+             ========================================================================== -->
+        <section id="radiosnet" class="apps-section">
+            <div class="container">
+                <div class="apps-container">
+                    
+                    <div class="radiosnet-badge">
+                        <div class="radiosnet-logo">
+                            <span class="material-symbols-rounded">radio</span>
+                            RadiosNet
+                        </div>
+                        <span style="color: var(--color-primary); font-weight: 600; letter-spacing: 1px;">ESTAMOS LÁ!</span>
+                    </div>
+
+                    <div class="apps-text">
+                        <h2>Leve a Nativa FM com você</h2>
+                        <p>Baixe o aplicativo RadiosNet e ouça a Nativa FM em qualquer lugar, no seu celular ou tablet, com qualidade digital e sem travamentos.</p>
+                        
+                        <div class="apps-buttons">
+                            <!-- Botão Google Play -->
+                            <a href="https://play.google.com/store/apps/details?id=br.com.radios.radiosnet" target="_blank" rel="noopener noreferrer" class="app-btn">
+                                <span class="material-symbols-rounded app-btn-icon">shop</span>
+                                <div class="app-btn-text">
+                                    <span>DISPONÍVEL NO</span>
+                                    <span>Google Play</span>
+                                </div>
+                            </a>
+                            
+                            <!-- Botão App Store -->
+                            <a href="https://apps.apple.com/br/app/radiosnet/id488401107" target="_blank" rel="noopener noreferrer" class="app-btn">
+                                <span class="material-symbols-rounded app-btn-icon">apple</span>
+                                <div class="app-btn-text">
+                                    <span>Baixar na</span>
+                                    <span>App Store</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- PUBLICIDADE -->
+        <div class="ad-section">
+            <div class="container">
+                <div class="ad-banner"></div>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+             CONTATO
+             ========================================================================== -->
+        <section id="contato" class="contact-section">
+            <div class="container">
+                <div class="contact-grid">
+                    
+                    <div class="contact-info">
+                        <div>
+                            <h2 class="section-title">Fale Conosco</h2>
+                            <p class="section-subtitle" style="margin-bottom: 20px;">Envie sua mensagem, peça sua música ou anuncie.</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <span class="material-symbols-rounded">location_on</span>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Localização</h4>
+                                <p>Entre Folhas, MG - Brasil</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <span class="material-symbols-rounded">mail</span>
+                            </div>
+                            <div class="contact-details">
+                                <h4>E-mail</h4>
+                                <p>contato@nativafmentrefolhas.com.br</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <span class="material-symbols-rounded">call</span>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Telefone / WhatsApp</h4>
+                                <p>(00) 00000-0000</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="contact-form" onsubmit="event.preventDefault(); alert('Mensagem enviada com sucesso! (Simulação)');">
+                        <div class="form-group">
+                            <label for="nome">Seu Nome</label>
+                            <input type="text" id="nome" class="form-control" placeholder="Digite seu nome completo" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Seu E-mail</label>
+                            <input type="email" id="email" class="form-control" placeholder="exemplo@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mensagem">Mensagem / Pedido Musical</label>
+                            <textarea id="mensagem" class="form-control" placeholder="Escreva sua mensagem aqui..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Enviar Mensagem</button>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==========================================================================
+         RODAPÉ
+         ========================================================================== -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                
+                <div>
+                    <a href="#" class="footer-logo">
+                        <img src="NATIVAFM.png" alt="Nativa FM">
+                    </a>
+                    <p class="footer-about">
+                        A Nativa FM é a sua rádio de coração em Entre Folhas. Levamos música de qualidade, entretenimento e informação com muito amor e dedicação a todos os nossos ouvintes.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Links Rápidos</h4>
+                    <div class="footer-links">
+                        <a href="#home">Início</a>
+                        <a href="#sobre">Nossa História</a>
+                        <a href="#programacao">Programação</a>
+                        <a href="#radiosnet">Aplicativo</a>
+                        <a href="#contato">Anuncie Conosco</a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Legal</h4>
+                    <div class="footer-links">
+                        <a href="#">Termos de Uso</a>
+                        <a href="#">Política de Privacidade</a>
+                        <a href="#">Direitos Autorais</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                &copy; <span id="current-year"></span> Nativa FM - O amor de Entre Folhas. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+         JAVASCRIPT
+         ========================================================================== -->
     <script>
-        // DOM Elements
-        const audio = document.getElementById('radio-player');
-        const btnPlay = document.getElementById('btn-play');
-        const btnStop = document.getElementById('btn-stop');
-        const volumeSlider = document.getElementById('volume-slider');
-        const statusText = document.getElementById('stream-status');
-        const liveText = document.getElementById('live-text');
-        const pulseDot = document.getElementById('pulse-dot');
-        const clockElement = document.getElementById('digital-clock');
-        const overlay = document.getElementById('interaction-overlay');
+        // Atualiza ano no rodapé
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // --- MENU E SCROLL ---
+        const header = document.getElementById('header');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('span');
+            icon.textContent = navLinks.classList.contains('active') ? 'close' : 'menu';
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.querySelector('span').textContent = 'menu';
+            });
+        });
+
+        // --- LÓGICA DA PROGRAMAÇÃO ATUAL ---
+        function updateSchedule() {
+            const now = new Date();
+            const hour = now.getHours();
+            
+            const cards = document.querySelectorAll('.schedule-card');
+            let currentProgramName = "Programação Nativa FM";
+
+            cards.forEach(card => {
+                const start = parseInt(card.getAttribute('data-start'));
+                const end = parseInt(card.getAttribute('data-end'));
+                
+                let isActive = false;
+                if (start < end) {
+                    isActive = hour >= start && hour < end;
+                } else {
+                    // Caso atravesse a meia noite (ex: 22h as 06h)
+                    isActive = hour >= start || hour < end;
+                }
+
+                if (isActive) {
+                    card.classList.add('active');
+                    if (!card.querySelector('.schedule-badge')) {
+                        const badge = document.createElement('span');
+                        badge.className = 'schedule-badge';
+                        badge.textContent = 'NO AR';
+                        badge.style.marginLeft = 'auto';
+                        card.querySelector('.schedule-time').appendChild(badge);
+                    }
+                    currentProgramName = card.querySelector('.schedule-name').textContent;
+                } else {
+                    card.classList.remove('active');
+                    const badge = card.querySelector('.schedule-badge');
+                    if (badge) badge.remove();
+                }
+            });
+
+            document.getElementById('current-program').textContent = currentProgramName;
+        }
+
+        updateSchedule();
+        setInterval(updateSchedule, 60000); // Atualiza a cada minuto
+
+        // Simulação de música tocando (como Web Rádios costumam buscar de APIs)
+        const dummySongs = [
+            "Gusttavo Lima - Termina Comigo Antes",
+            "Marília Mendonça - Leão",
+            "Jorge & Mateus - Todo Seu",
+            "Henrique & Juliano - Arranhão",
+            "Maiara & Maraisa - A Culpa é Nossa",
+            "Luan Santana - Coração Cigano",
+            "Simone Mendes - Erro Gostoso"
+        ];
         
-        // Web Audio API Variables
-        let audioCtx;
-        let analyserL, analyserR;
-        let dataArrayL, dataArrayR;
+        function rotateSongs() {
+            const songEl = document.getElementById('current-song');
+            const randomSong = dummySongs[Math.floor(Math.random() * dummySongs.length)];
+            songEl.style.opacity = 0;
+            setTimeout(() => {
+                songEl.textContent = randomSong;
+                songEl.style.opacity = 1;
+            }, 500);
+        }
+        
+        rotateSongs();
+        setInterval(rotateSongs, 120000); // Troca música a cada 2 min para simulação
+
+        // --- SISTEMA DE ÁUDIO E WEB AUDIO API ---
+        const audioEl = document.getElementById('radio-stream');
+        const btnPlay = document.getElementById('btn-play');
+        const playIcon = document.getElementById('play-icon');
+        const volumeSlider = document.getElementById('volume-slider');
+        const statusMsg = document.getElementById('audio-status-msg');
+        
+        // Canvas Elements
+        const canvas = document.getElementById('spectrum');
+        const ctx = canvas.getContext('2d');
+        const vuL = document.getElementById('vu-l');
+        const vuR = document.getElementById('vu-r');
+
+        let audioCtx, analyser, source;
+        let isPlaying = false;
         let isAudioSetup = false;
         let animationId;
-        let smoothVolL = 0;
-        let smoothVolR = 0;
-        
-        // Configs
-        const NUM_LEDS = 20;
 
-        // Initialize UI
-        function initUI() {
-            generateLEDs('vu-l');
-            generateLEDs('vu-r');
-            updateClock();
-            setInterval(updateClock, 1000);
-            
-            audio.volume = volumeSlider.value;
-            
-            // Try Autoplay
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    // Autoplay permitted
-                    setupWebAudio();
-                    updatePlayerState('playing');
-                }).catch(error => {
-                    // Autoplay blocked - require interaction
-                    overlay.classList.add('active');
-                    updatePlayerState('stopped');
-                    statusText.textContent = "Aguardando inicialização...";
-                });
-            }
+        // Ajustar Canvas Res
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 80;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        // Generate VU Meter LEDs
-        function generateLEDs(containerId) {
-            const container = document.getElementById(containerId);
-            for (let i = 0; i < NUM_LEDS; i++) {
-                const led = document.createElement('div');
-                led.className = 'led';
-                container.appendChild(led);
-            }
-        }
-
-        // Clock Update
-        function updateClock() {
-            const now = new Date();
-            clockElement.textContent = now.toLocaleTimeString('pt-BR');
-        }
-
-        // Setup Web Audio API
-        function setupWebAudio() {
+        function setupAudio() {
             if (isAudioSetup) return;
             
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 audioCtx = new AudioContext();
+                analyser = audioCtx.createAnalyser();
                 
-                const source = audioCtx.createMediaElementSource(audio);
-                const splitter = audioCtx.createChannelSplitter(2);
-                
-                analyserL = audioCtx.createAnalyser();
-                analyserR = audioCtx.createAnalyser();
-                
-                analyserL.fftSize = 256;
-                analyserR.fftSize = 256;
-                
-                // Routing: Source -> Splitter -> Analysers
-                source.connect(splitter);
-                splitter.connect(analyserL, 0);
-                splitter.connect(analyserR, 1);
-                
-                // Re-route to speakers
-                source.connect(audioCtx.destination);
-                
-                dataArrayL = new Uint8Array(analyserL.frequencyBinCount);
-                dataArrayR = new Uint8Array(analyserR.frequencyBinCount);
+                // Configurações do Analyser para suavidade
+                analyser.fftSize = 256;
+                analyser.smoothingTimeConstant = 0.85;
+
+                source = audioCtx.createMediaElementSource(audioEl);
+                source.connect(analyser);
+                analyser.connect(audioCtx.destination);
                 
                 isAudioSetup = true;
-                drawVUMeter();
+                drawVisualizer();
             } catch (e) {
-                console.error("Web Audio API Error: ", e);
-                statusText.textContent = "Erro no visualizador (CORS/AudioContext)";
+                console.warn("Web Audio API bloqueada por CORS ou restrições do navegador. Fallback de visual visualizador aplicado.");
+                statusMsg.style.display = 'block';
+                statusMsg.textContent = "Áudio tocando (Visualizador desativado por restrição de CORS da rádio).";
+                // Inicia visualizador fake agradável como fallback
+                drawFakeVisualizer();
             }
         }
 
-        // Calculate Average Volume from Frequencies
-        function getAverageVolume(array) {
-            let values = 0;
-            for (let i = 0; i < array.length; i++) {
-                values += array[i];
-            }
-            return values / array.length;
-        }
-
-        // VU Meter Animation Loop
-        function drawVUMeter() {
-            animationId = requestAnimationFrame(drawVUMeter);
-            
-            if (audio.paused) {
-                // Smooth decay when paused
-                smoothVolL *= 0.85;
-                smoothVolR *= 0.85;
-            } else {
-                analyserL.getByteFrequencyData(dataArrayL);
-                analyserR.getByteFrequencyData(dataArrayR);
-                
-                // Boost signal visually
-                let volL = getAverageVolume(dataArrayL) * 1.8;
-                let volR = getAverageVolume(dataArrayR) * 1.8;
-                
-                // Add some stereo randomness if stream is purely mono or silent gaps
-                if (volL === volR && volL > 0) {
-                    volL += Math.random() * 5;
-                    volR += Math.random() * 5;
-                }
-
-                // Smooth out the jumping
-                smoothVolL = smoothVolL * 0.6 + volL * 0.4;
-                smoothVolR = smoothVolR * 0.6 + volR * 0.4;
-            }
-            
-            updateLEDStrip('vu-l', smoothVolL);
-            updateLEDStrip('vu-r', smoothVolR);
-        }
-
-        // Update physical LEDs
-        function updateLEDStrip(containerId, volume) {
-            const maxVol = 255;
-            const normalizedVol = Math.min(volume / maxVol, 1);
-            const activeLEDs = Math.round(normalizedVol * NUM_LEDS);
-            
-            const leds = document.querySelectorAll(`#${containerId} .led`);
-            
-            leds.forEach((led, index) => {
-                if (index < activeLEDs) {
-                    let color = 'var(--primary-color)'; // Green
-                    let shadow = 'var(--primary-glow)';
-                    
-                    if (index >= NUM_LEDS * 0.8) {
-                        color = 'var(--danger-color)'; // Red
-                        shadow = 'rgba(255, 51, 102, 0.4)';
-                    } else if (index >= NUM_LEDS * 0.6) {
-                        color = 'var(--warning-color)'; // Yellow
-                        shadow = 'rgba(255, 204, 0, 0.4)';
-                    }
-                    
-                    led.style.backgroundColor = color;
-                    led.style.boxShadow = `0 0 8px ${shadow}`;
-                } else {
-                    led.style.backgroundColor = 'var(--led-off)';
-                    led.style.boxShadow = 'none';
-                }
-            });
-        }
-
-        // Player Controls
-        function handleUserInteraction() {
-            overlay.classList.remove('active');
-            playAudio();
-        }
-
-        function playAudio() {
-            if (!isAudioSetup) {
-                setupWebAudio();
-            }
-            
+        // --- CONTROLES DE PLAY/PAUSE/STOP ---
+        async function togglePlay() {
             if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            
-            // Force reload stream to avoid stale buffers
-            if (audio.paused && audio.currentTime > 0) {
-                audio.src = audio.src; 
+                await audioCtx.resume();
             }
 
-            audio.play().then(() => {
-                updatePlayerState('playing');
-            }).catch(e => {
-                console.error(e);
-                statusText.textContent = "Erro ao conectar. Tente novamente.";
-            });
+            if (!isPlaying) {
+                if (!isAudioSetup) setupAudio();
+                
+                audioEl.play().then(() => {
+                    isPlaying = true;
+                    btnPlay.classList.add('playing');
+                    playIcon.textContent = 'pause';
+                    statusMsg.style.display = 'none';
+                }).catch(err => {
+                    console.error("Erro ao reproduzir:", err);
+                    statusMsg.style.display = 'block';
+                    statusMsg.textContent = "Clique novamente para confirmar a reprodução (Proteção do Navegador).";
+                });
+            } else {
+                audioEl.pause();
+                isPlaying = false;
+                btnPlay.classList.remove('playing');
+                playIcon.textContent = 'play_arrow';
+            }
         }
 
         function stopAudio() {
-            audio.pause();
-            // Reset stream position for live radio
-            audio.currentTime = 0; 
-            updatePlayerState('stopped');
+            audioEl.pause();
+            audioEl.currentTime = 0;
+            // Para forçar o recarregamento do streaming ao dar play novamente
+            audioEl.src = audioEl.src; 
+            isPlaying = false;
+            btnPlay.classList.remove('playing');
+            playIcon.textContent = 'play_arrow';
+            resetVU();
         }
 
-        // Volume Change Event
+        // --- VOLUME ---
+        audioEl.volume = volumeSlider.value / 100;
         volumeSlider.addEventListener('input', (e) => {
-            audio.volume = e.target.value;
+            audioEl.volume = e.target.value / 100;
         });
 
-        // Update UI States
-        function updatePlayerState(state) {
-            if (state === 'playing') {
-                btnPlay.style.transform = "scale(0.9)";
-                btnPlay.style.opacity = "0.7";
-                btnPlay.style.pointerEvents = "none";
+        // --- DESENHO DO ESPECTRO E VU METER REAL ---
+        function drawVisualizer() {
+            if (!analyser) return;
+            
+            animationId = requestAnimationFrame(drawVisualizer);
+
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteFrequencyData(dataArray);
+
+            // Limpa canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            let sumL = 0;
+            let sumR = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                barHeight = dataArray[i] / 2.5;
+
+                // Gradiente das barras
+                const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+                gradient.addColorStop(0, '#00E676'); // Verde primário
+                gradient.addColorStop(0.5, '#00b35c');
+                gradient.addColorStop(1, '#007BFF'); // Azul secundário
+
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+
+                x += barWidth + 1;
+
+                // Cálculo simplificado para VU Meter (Divisão rudimentar das frequências para L/R visual)
+                if (i < bufferLength / 2) {
+                    sumL += dataArray[i];
+                } else {
+                    sumR += dataArray[i];
+                }
+            }
+
+            // Atualiza VU Meters
+            if (isPlaying) {
+                const avgL = (sumL / (bufferLength / 2)) / 255 * 100;
+                const avgR = (sumR / (bufferLength / 2)) / 255 * 100;
                 
-                btnStop.style.opacity = "1";
-                btnStop.style.pointerEvents = "auto";
-                
-                liveText.textContent = "AO VIVO";
-                liveText.style.color = "var(--primary-color)";
-                pulseDot.style.backgroundColor = "var(--primary-color)";
-                pulseDot.style.animationPlayState = "running";
-                
-                statusText.innerHTML = "Tocando Agora | <strong>Sintonia Máxima</strong>";
+                // Multiplicador para dar mais movimento
+                vuL.style.width = Math.min(100, avgL * 1.8) + '%';
+                vuR.style.width = Math.min(100, avgR * 1.8 + (Math.random() * 5)) + '%';
             } else {
-                btnPlay.style.transform = "scale(1)";
-                btnPlay.style.opacity = "1";
-                btnPlay.style.pointerEvents = "auto";
-                
-                btnStop.style.opacity = "0.7";
-                btnStop.style.pointerEvents = "none";
-                
-                liveText.textContent = "PAUSADO";
-                liveText.style.color = "var(--text-secondary)";
-                pulseDot.style.backgroundColor = "var(--text-secondary)";
-                pulseDot.style.animationPlayState = "paused";
-                
-                statusText.textContent = "Transmissão pausada";
+                resetVU();
             }
         }
 
-        // Audio Events for buffering/network issues
-        audio.addEventListener('waiting', () => {
-            statusText.textContent = "Carregando buffer...";
-        });
-        
-        audio.addEventListener('playing', () => {
-            updatePlayerState('playing');
-        });
-        
-        audio.addEventListener('error', () => {
-            statusText.textContent = "Sinal perdido. Reconectando...";
-            updatePlayerState('stopped');
-        });
+        // Fallback visualizer if CORS restricts AnalyserNode
+        function drawFakeVisualizer() {
+            if(isPlaying) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const bars = 40;
+                const barWidth = canvas.width / bars - 2;
+                let x = 0;
+                
+                for(let i = 0; i < bars; i++) {
+                    const barHeight = Math.random() * canvas.height * 0.8;
+                    ctx.fillStyle = '#00E676';
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                    x += barWidth + 2;
+                }
+                
+                vuL.style.width = (40 + Math.random() * 40) + '%';
+                vuR.style.width = (40 + Math.random() * 40) + '%';
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                resetVU();
+            }
+            setTimeout(() => requestAnimationFrame(drawFakeVisualizer), 100);
+        }
 
-        // Boot
-        window.addEventListener('load', initUI);
+        function resetVU() {
+            vuL.style.width = '0%';
+            vuR.style.width = '0%';
+        }
+
+        // Tentar Autoplay na carga (maioria dos navegadores bloqueia até ter interação)
+        window.addEventListener('load', () => {
+            const playPromise = audioEl.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    isPlaying = true;
+                    btnPlay.classList.add('playing');
+                    playIcon.textContent = 'pause';
+                    setupAudio();
+                }).catch(error => {
+                    // Autoplay prevenido
+                    console.log("Autoplay bloqueado pelo navegador. Aguardando interação do usuário.");
+                });
+            }
+        });
 
     </script>
 </body>
