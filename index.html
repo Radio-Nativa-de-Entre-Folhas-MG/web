@@ -1715,9 +1715,6 @@
             let barHeight;
             let x = 0;
 
-            let sumL = 0;
-            let sumR = 0;
-
             for (let i = 0; i < bufferLength; i++) {
                 barHeight = dataArray[i] / 2.5;
 
@@ -1731,23 +1728,18 @@
                 ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
 
                 x += barWidth + 1;
-
-                // Cálculo simplificado para VU Meter (Divisão rudimentar das frequências para L/R visual)
-                if (i < bufferLength / 2) {
-                    sumL += dataArray[i];
-                } else {
-                    sumR += dataArray[i];
-                }
             }
 
-            // Atualiza VU Meters
+            // Atualiza VU Meters (Nova lógica baseada no nível médio)
             if (isPlaying) {
-                const avgL = (sumL / (bufferLength / 2)) / 255 * 100;
-                const avgR = (sumR / (bufferLength / 2)) / 255 * 100;
-                
-                // Multiplicador para dar mais movimento
-                vuL.style.width = Math.min(100, avgL * 1.8) + '%';
-                vuR.style.width = Math.min(100, avgR * 1.8 + (Math.random() * 5)) + '%';
+                const sum = dataArray.reduce((a, b) => a + b, 0);
+                const avg = sum / bufferLength;
+
+                const levelL = (avg / 255) * 100;
+                const levelR = levelL * (0.9 + Math.random() * 0.2);
+
+                vuL.style.width = Math.min(100, levelL * 1.8) + '%';
+                vuR.style.width = Math.min(100, levelR * 1.8) + '%';
             } else {
                 resetVU();
             }
