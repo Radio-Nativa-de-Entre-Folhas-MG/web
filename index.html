@@ -2,822 +2,262 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nativa FM - O amor de Entre Folhas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Nativa FM 98.7 MHz - O amor de Entre Folhas. Rádio comunitária ao vivo com qualidade profissional.">
+    <meta name="theme-color" content="#0a0f1e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Nativa FM 98.7 • O amor de Entre Folhas</title>
     <link rel="icon" href="icone.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-color: #050a0f;
-            --surface: rgba(13, 20, 28, 0.7);
-            --surface-border: rgba(255, 255, 255, 0.05);
-            --primary: #00ff88;
-            --primary-glow: rgba(0, 255, 136, 0.3);
-            --secondary: #00b8ff;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --font: 'Outfit', sans-serif;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font);
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        /* 🌊 Background Equalizer */
-        #bg-eq {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            opacity: 0.12;
-            pointer-events: none;
-        }
-
-        .wrapper {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Glassmorphism utility */
-        .glass {
-            background: var(--surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--surface-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--surface-border);
-        }
-
-        .header-logo img {
-            height: 50px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 10px var(--primary-glow));
-        }
-
-        /* Hero Section */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 4rem 1rem;
-            margin-top: 2rem;
-        }
-
-        .hero-logo {
-            height: 150px;
-            margin-bottom: 1.5rem;
-            animation: float 6s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px var(--primary-glow));
-        }
-
-        .freq {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            font-weight: 300;
-        }
-
-        /* ▶️ Player Section */
-        .player-section {
-            width: 90%;
-            max-width: 900px;
-            margin: 0 auto 4rem auto;
-            border-radius: 24px;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 2rem;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .player-logo {
-            height: 80px;
-            border-radius: 12px;
-        }
-
-        .metadata-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .live-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primary);
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-        }
-
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--primary);
-            animation: blink 1.5s infinite;
-        }
-
-        .song-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .artist-name {
-            font-size: 1rem;
-            color: var(--secondary);
-            font-weight: 400;
-        }
-
-        .controls {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .btn-play {
-            background: linear-gradient(135deg, var(--primary), #00c368);
-            border: none;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            color: var(--bg-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 0 25px var(--primary-glow);
-            transition: var(--transition);
-        }
-
-        .btn-play:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 35px rgba(0, 255, 136, 0.5);
-        }
-
-        .btn-play svg {
-            width: 30px;
-            height: 30px;
-            fill: currentColor;
-            margin-left: 5px;
-        }
-
-        .btn-play.playing svg {
-            margin-left: 0;
-        }
-
-        /* 📊 VU Meters */
-        .vu-container {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 1rem;
-            background: rgba(0,0,0,0.3);
-            padding: 1rem;
-            border-radius: 12px;
-        }
-
-        .vu-channel {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .vu-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 800;
-            width: 20px;
-        }
-
-        .vu-bar-bg {
-            flex-grow: 1;
-            height: 12px;
-            background: #1e293b;
-            border-radius: 6px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .vu-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #00ff88 0%, #ffeb3b 75%, #ff3b3b 100%);
-            transition: width 0.05s linear;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
-        }
-
-        /* Schedule & Info Grids */
-        .grid-section {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto 4rem auto;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: var(--primary);
-        }
-
-        .schedule-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .schedule-card {
-            padding: 1.5rem;
-            border-radius: 16px;
-            text-align: center;
-            transition: var(--transition);
-            border-left: 4px solid var(--primary);
-        }
-
-        .schedule-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--secondary);
-            box-shadow: 0 10px 20px rgba(0, 184, 255, 0.1);
-        }
-
-        .schedule-time {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
-        }
-
-        .schedule-name {
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .info-card {
-            padding: 2rem;
-            border-radius: 20px;
-        }
-
-        .info-card h3 {
-            color: var(--secondary);
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .info-list {
-            list-style: none;
-        }
-
-        .info-list li {
-            margin-bottom: 0.8rem;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .info-list span {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .info-list strong {
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        /* RadiosNet Button */
-        .radiosnet-container {
-            text-align: center;
-            margin: 4rem auto;
-            padding: 2rem;
-        }
-        
-        .radiosnet-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #ff4b2b, #ff416c);
-            color: white;
-            text-decoration: none;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            box-shadow: 0 10px 20px rgba(255, 65, 108, 0.3);
-            transition: var(--transition);
-        }
-
-        .radiosnet-btn:hover {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 15px 25px rgba(255, 65, 108, 0.5);
-        }
-
-        /* Footer */
-        footer {
-            margin-top: auto;
-            padding: 3rem 5%;
-            text-align: center;
-            border-top: 1px solid var(--surface-border);
-        }
-
-        .footer-logo {
-            height: 60px;
-            margin-bottom: 1rem;
-            opacity: 0.8;
-            filter: grayscale(100%);
-            transition: var(--transition);
-        }
-
-        .footer-logo:hover {
-            opacity: 1;
-            filter: grayscale(0%);
-        }
-
-        /* Animations */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .player-section {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .player-logo {
-                margin: 0 auto;
-            }
-            .controls {
-                justify-content: center;
-            }
-            .hero h1 { font-size: 2.5rem; }
-            .hero p { font-size: 1.2rem; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- 🌊 Equalizador de Fundo -->
-    <canvas id="bg-eq"></canvas>
+    <!-- Equalizador de fundo full-width -->
+    <canvas id="equalizerCanvas" class="equalizer-bg" aria-hidden="true"></canvas>
 
-    <div class="wrapper">
-        <!-- HEADER -->
-        <header class="glass">
-            <a href="#" class="header-logo">
-                <img src="logo.png" alt="Nativa FM Logo" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<h2 style=\'color:var(--primary)\'>NATIVA FM</h2>')">
-            </a>
-            <div style="color: var(--text-muted); font-weight: 600;">98.7 MHz</div>
-        </header>
-
-        <!-- MAIN CONTENT -->
-        <main>
-            <!-- HERO -->
-            <section class="hero">
-                <img src="logo.png" alt="Nativa FM" class="hero-logo" onerror="this.style.display='none'">
-                <div class="freq">98.7 MHz</div>
-                <h1>Nativa FM</h1>
-                <p>O amor de Entre Folhas</p>
-            </section>
-
-            <!-- PLAYER INTERFACE -->
-            <section class="player-section glass">
-                <img src="icone.png" alt="Ícone Player" class="player-logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdib3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwZmY4OCI+PHBhdGggZD0iTTEyIDJhMTAgMTAgMCAxIDAgMTAgMTAgMTAgMTAgMCAwIDAtMTAtMTB6bTAgMThhOCA4IDAgMSAxIDgtOCA4IDggMCAwIDEtOCA4em0zLTYuNWwtNiAzLjZ2LTcuMmwyLjEtMS4ydjQuOGwyLjktMS44em0wLTRsLTYgMy42di0yLjRsNi0zLjZ6Ii8+PC9zdmc+'">
-                
-                <div class="metadata-container">
-                    <div class="live-badge">
-                        <div class="live-dot"></div> Ao Vivo
-                    </div>
-                    <div class="song-title" id="song-title">Conectando...</div>
-                    <div class="artist-name" id="artist-name">Aguarde</div>
-                </div>
-
-                <div class="controls">
-                    <button class="btn-play" id="play-btn" aria-label="Play/Pause">
-                        <!-- Play Icon -->
-                        <svg id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        <!-- Pause Icon (Hidden initially) -->
-                        <svg id="icon-pause" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                    </button>
-                </div>
-
-                <!-- VU METERS (L/R Independent) -->
-                <div class="vu-container">
-                    <div class="vu-channel">
-                        <span class="vu-label">L</span>
-                        <div class="vu-bar-bg"><div class="vu-bar-fill" id="vu-l"></div></div>
-                    </div>
-                    <div class="vu-channel">
-                        <span class="vu-label">R</span>
-                        <div class="vu-bar-bg"><div class="vu-bar-fill" id="vu-r"></div></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- RADIOSNET OBRIGATÓRIO -->
-            <section class="radiosnet-container">
-                <!-- CÓDIGOS RADIOSNET AQUI -->
-                <a href="https://www.radios.com.br" target="_blank" class="radiosnet-btn">
-                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-                    Votar no RadiosNet
-                </a>
-            </section>
-
-            <!-- PROGRAMAÇÃO -->
-            <section class="grid-section">
-                <h2 class="section-title">Programação</h2>
-                <div class="schedule-grid">
-                    <div class="schedule-card glass">
-                        <div class="schedule-time">06:00</div>
-                        <div class="schedule-name">Manhã Musical</div>
-                    </div>
-                    <div class="schedule-card glass">
-                        <div class="schedule-time">09:00</div>
-                        <div class="schedule-name">Show do Amor</div>
-                    </div>
-                    <div class="schedule-card glass">
-                        <div class="schedule-time">12:00</div>
-                        <div class="schedule-name">Top Hits</div>
-                    </div>
-                    <div class="schedule-card glass">
-                        <div class="schedule-time">15:00</div>
-                        <div class="schedule-name">Tarde Sertaneja</div>
-                    </div>
-                    <div class="schedule-card glass">
-                        <div class="schedule-time">18:00</div>
-                        <div class="schedule-name">Hora do Ouvinte</div>
-                    </div>
-                    <div class="schedule-card glass">
-                        <div class="schedule-time">20:00</div>
-                        <div class="schedule-name">Love Songs</div>
-                    </div>
-                    <div class="schedule-card glass">
-                        <div class="schedule-time">22:00</div>
-                        <div class="schedule-name">Madrugada Relax</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- INSTITUCIONAL -->
-            <section class="grid-section">
-                <h2 class="section-title">Institucional</h2>
-                <div class="info-grid">
-                    <div class="info-card glass">
-                        <h3>Sobre a Associação</h3>
-                        <ul class="info-list">
-                            <li><span>Razão Social</span> <strong>Associação Comunitária Entrefolhense de Radiodifusão</strong></li>
-                            <li><span>CNPJ</span> <strong>03.077.711/0001-52</strong></li>
-                            <li><span>Fundação</span> <strong>18/06/1996</strong></li>
-                            <li><span>Situação</span> <strong><span style="color:var(--primary)">Ativa</span></strong></li>
-                        </ul>
-                    </div>
-                    <div class="info-card glass">
-                        <h3>Contato & Endereço</h3>
-                        <ul class="info-list">
-                            <li><span>Endereço</span> <strong>Rua José Garcia de Andrade, 400<br>Entre Folhas - MG, 35324-000</strong></li>
-                            <li><span>Telefone / WhatsApp</span> <strong>(33) 99957-1591</strong></li>
-                            <li><span>E-mail</span> <strong>radionativadeentrefolhas@gmail.com</strong></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- FOOTER -->
-        <footer>
-            <img src="logo.png" alt="Nativa FM" class="footer-logo" onerror="this.style.display='none'">
-            <p style="color: var(--text-muted); font-size: 0.9rem;">
-                &copy; 1996 - <script>document.write(new Date().getFullYear())</script> Nativa FM 98.7 MHz. Todos os direitos reservados.
-            </p>
-        </footer>
+    <!-- Overlay de interação (autoplay bloqueado) -->
+    <div id="interactionOverlay" class="interaction-overlay hidden">
+        <div class="interaction-card glass">
+            <div class="logo-text">📻 Nativa FM</div>
+            <p class="interaction-sub">Toque para começar a ouvir</p>
+            <button id="interactionBtn" class="btn-ouvir pulse">▶ Ouvir Agora</button>
+        </div>
     </div>
 
-    <script>
-        /** 
-         * LÓGICA DE ÁUDIO PROFISSIONAL & METADADOS
-         */
-        const STREAM_URL = 'https://stream.zeno.fm/emcg0pkcf4hvv';
-        const METADATA_URL = 'https://api.zeno.fm/mounts/metadata/subscribe/emcg0pkcf4hvv';
+    <!-- Header fixo -->
+    <header class="site-header glass-strong">
+        <div class="header-container">
+            <a href="#" class="logo-link" aria-label="Nativa FM - Página inicial">
+                <img src="logo.png" alt="Nativa FM Logo" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="logo-fallback" style="display:none;">
+                    <span class="logo-icon">📻</span>
+                    <span class="logo-name">Nativa FM</span>
+                    <span class="logo-freq">98.7</span>
+                </div>
+            </a>
+            <nav class="main-nav" aria-label="Navegação principal">
+                <ul>
+                    <li><a href="#hero">Início</a></li>
+                    <li><a href="#programacao">Programação</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#radiosnet">App</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
+            <button id="playPauseBtn" class="btn-play-header" aria-label="Reproduzir rádio ao vivo">
+                <span class="play-icon">▶</span>
+                <span class="pause-icon" style="display:none;">⏸</span>
+                <span class="btn-text">Ouvir</span>
+            </button>
+        </div>
+    </header>
 
-        // Elementos DOM
-        const audio = new Audio();
-        audio.crossOrigin = "anonymous"; // Necessário para Web Audio API com streams externos
-        audio.src = STREAM_URL;
-        audio.muted = true; // Inicia mutado (Autoplay policy)
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <div class="hero-logo">
+                <img src="logo.png" alt="Nativa FM" class="hero-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="hero-logo-fallback" style="display:none;">
+                    <span class="hero-icon">📻</span>
+                    <h1 class="hero-title-fallback">Nativa FM <span class="freq-hero">98.7</span></h1>
+                </div>
+            </div>
+            <h2 class="hero-slogan" id="heroSlogan">O amor de Entre Folhas</h2>
+            <div class="hero-status" id="heroStatus">🔴 AO VIVO</div>
+        </div>
+        <div class="hero-waves" aria-hidden="true">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,60 C240,0 360,120 720,60 C1080,0 1200,120 1440,60 L1440,120 L0,120 Z" fill="rgba(46,125,245,0.15)"/>
+                <path d="M0,80 C240,20 360,100 720,70 C1080,40 1200,90 1440,70 L1440,120 L0,120 Z" fill="rgba(99,58,232,0.1)"/>
+            </svg>
+        </div>
+    </section>
 
-        const btnPlay = document.getElementById('play-btn');
-        const iconPlay = document.getElementById('icon-play');
-        const iconPause = document.getElementById('icon-pause');
-        const titleEl = document.getElementById('song-title');
-        const artistEl = document.getElementById('artist-name');
-        
-        const vuL = document.getElementById('vu-l');
-        const vuR = document.getElementById('vu-r');
-        const canvasBg = document.getElementById('bg-eq');
-        const ctxBg = canvasBg.getContext('2d');
+    <!-- Player Principal -->
+    <section id="player" class="player-section">
+        <div class="player-card glass-strong glow-border">
+            <div class="player-logo-area">
+                <img src="logo.png" alt="Nativa FM" class="player-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="player-logo-fallback" style="display:none;">
+                    <span class="player-fallback-icon">📻</span>
+                </div>
+            </div>
+            <div class="player-info">
+                <div class="player-status-text" id="playerStatusLabel">🔴 AO VIVO — Nativa FM 98.7</div>
+                <div class="player-song">
+                    <span id="currentSong" class="song-title">Conectando ao streaming...</span>
+                    <span id="currentArtist" class="song-artist"></span>
+                </div>
+                <div class="vu-meter-container" id="vuMeterContainer">
+                    <div class="vu-channel">
+                        <div class="vu-label">L</div>
+                        <div class="vu-bar-track">
+                            <div class="vu-bar-fill" id="vuBarL"></div>
+                        </div>
+                        <div class="vu-peak" id="vuPeakL">-∞</div>
+                    </div>
+                    <div class="vu-channel">
+                        <div class="vu-label">R</div>
+                        <div class="vu-bar-track">
+                            <div class="vu-bar-fill" id="vuBarR"></div>
+                        </div>
+                        <div class="vu-peak" id="vuPeakR">-∞</div>
+                    </div>
+                </div>
+                <div class="player-controls">
+                    <button id="mainPlayBtn" class="btn-main-play" aria-label="Reproduzir ao vivo">
+                        <span class="play-icon-large">▶</span>
+                        <span class="pause-icon-large" style="display:none;">⏸</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="player-wave-decoration" aria-hidden="true">
+            <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+                <path d="M0,30 C200,0 400,60 600,30 C800,0 1000,60 1200,30 L1200,60 L0,60 Z" fill="url(#wave-grad)"/>
+                <defs>
+                    <linearGradient id="wave-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#2e7df5" stop-opacity="0.3"/>
+                        <stop offset="100%" stop-color="#633ae8" stop-opacity="0.3"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+    </section>
 
-        // Web Audio API Variables
-        let audioCtx, source, splitter, analyserL, analyserR, analyserFFT;
-        let isAudioInitialized = false;
-        let isPlaying = false;
-        let animationId;
+    <!-- Seção Agora Tocando / Metadados -->
+    <section id="nowplaying" class="nowplaying-section">
+        <div class="np-card glass">
+            <div class="np-header">
+                <span class="np-badge">🎵 Agora Tocando</span>
+                <span class="np-stream-info" id="streamBitrate">Stream: Zeno.fm</span>
+            </div>
+            <div id="metadataContainer" class="metadata-text">
+                <span class="meta-title">Aguardando informações da música...</span>
+                <span class="meta-artist"></span>
+            </div>
+        </div>
+    </section>
 
-        // Resize Background Canvas
-        function resizeCanvas() {
-            canvasBg.width = window.innerWidth;
-            canvasBg.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+    <!-- Seção Sobre / Institucional -->
+    <section id="sobre" class="about-section">
+        <div class="section-header">
+            <h2 class="section-title">📡 Sobre a Rádio</h2>
+            <div class="title-underline"></div>
+        </div>
+        <div class="about-grid">
+            <div class="about-card glass">
+                <h3>Associação Comunitária Entrefolhense de Radiodifusão</h3>
+                <p><strong>CNPJ:</strong> 03.077.711/0001-52</p>
+                <p><strong>Fundação:</strong> 18 de junho de 1996</p>
+                <p><strong>Endereço:</strong> Rua José Garcia de Andrade, 400, Entre Folhas – MG</p>
+                <p><strong>Frequência:</strong> 98.7 MHz</p>
+            </div>
+            <div class="about-card glass">
+                <h3>Nossa Missão</h3>
+                <p>Levar informação, cultura e entretenimento com responsabilidade social, valorizando a comunidade de Entre Folhas e região.</p>
+                <p>Somos uma rádio comunitária apaixonada por música e pelo bem-estar de nossos ouvintes.</p>
+            </div>
+        </div>
+    </section>
 
-        // Inicializa o Web Audio API Graph
-        function initAudioEngine() {
-            if (isAudioInitialized) return;
-            
-            try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                source = audioCtx.createMediaElementSource(audio);
-                
-                // Nós Analisadores
-                analyserFFT = audioCtx.createAnalyser();
-                analyserFFT.fftSize = 256; // 128 bins (perfeito para fundo)
-                
-                analyserL = audioCtx.createAnalyser();
-                analyserR = audioCtx.createAnalyser();
-                analyserL.fftSize = 1024;
-                analyserR.fftSize = 1024;
+    <!-- Seção Programação -->
+    <section id="programacao" class="programacao-section">
+        <div class="section-header">
+            <h2 class="section-title">📋 Programação</h2>
+            <div class="title-underline"></div>
+        </div>
+        <div class="prog-table-wrapper glass">
+            <table class="prog-table">
+                <thead>
+                    <tr>
+                        <th>Horário</th>
+                        <th>Programa</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>06:00 - 08:00</td><td>Bom Dia Nativa</td><td>Notícias, previsão do tempo e músicas para começar o dia</td></tr>
+                    <tr><td>08:00 - 12:00</td><td>Manhã Sertaneja</td><td>O melhor do sertanejo raiz e universitário</td></tr>
+                    <tr><td>12:00 - 14:00</td><td>Almoço Musical</td><td>Seleção de MPB e flashbacks</td></tr>
+                    <tr><td>14:00 - 17:00</td><td>Tarde Nativa</td><td>Sucessos, entrevistas e participação dos ouvintes</td></tr>
+                    <tr><td>17:00 - 19:00</td><td>Forró e Viola</td><td>Tradição nordestina e moda de viola</td></tr>
+                    <tr><td>19:00 - 21:00</td><td>Noite de Flashback</td><td>Anos 70, 80 e 90 em destaque</td></tr>
+                    <tr><td>21:00 - 00:00</td><td>Madrugada Nativa</td><td>Músicas românticas e sucessos internacionais</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-                // Separador de Canais (Estéreo Real)
-                splitter = audioCtx.createChannelSplitter(2);
+    <!-- Seção RadiosNet -->
+    <section id="radiosnet" class="radiosnet-section">
+        <div class="section-header">
+            <h2 class="section-title">📱 Aplicativo RadiosNet</h2>
+            <div class="title-underline"></div>
+        </div>
+        <div class="radiosnet-content glass">
+            <p class="radiosnet-desc">Ouça a Nativa FM e milhares de outras rádios no app oficial RadiosNet.</p>
+            <div class="radiosnet-banner">
+                <img src="https://img.radios.com.br/divulgue/banner/2025/468x60/468x60.png" alt="RadiosNet Banner" class="banner-img" loading="lazy">
+            </div>
+            <div class="radiosnet-badges">
+                <a href="https://play.google.com/store/apps/details?id=br.com.radios.radiosmobile.radiosnet&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1" target="_blank" rel="noopener noreferrer" class="badge-link" aria-label="Disponível no Google Play">
+                    <img width="142" height="45" alt="Disponível no Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/pt-br-play-badge-border.png" loading="lazy">
+                </a>
+                <a href="https://itunes.apple.com/br/app/radiosnet/id1089290449?mt=8" target="_blank" rel="noopener noreferrer" class="badge-link apple-badge" aria-label="Baixar na App Store">
+                    <!-- Badge Apple via SVG inline para evitar problemas de renderização -->
+                    <svg viewBox="0 0 152 45" width="152" height="45" xmlns="http://www.w3.org/2000/svg">
+                        <image href="https://static.radios.com.br/img/ios-appstore-badge-ptbr.png" width="152" height="45" preserveAspectRatio="xMidYMid meet"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
 
-                // Roteamento
-                source.connect(analyserFFT); // Para o Equalizador de Fundo
-                source.connect(splitter); // Separa Canais
-                splitter.connect(analyserL, 0); // Canal Esquerdo
-                splitter.connect(analyserR, 1); // Canal Direito
-                
-                // Conecta à saída final
-                source.connect(audioCtx.destination);
-                
-                isAudioInitialized = true;
-                visualize();
-            } catch (e) {
-                console.error("Web Audio API bloqueada ou não suportada", e);
-            }
-        }
+    <!-- Seção Contato -->
+    <section id="contato" class="contato-section">
+        <div class="section-header">
+            <h2 class="section-title">📞 Contato</h2>
+            <div class="title-underline"></div>
+        </div>
+        <div class="contato-card glass">
+            <p><strong>Telefone:</strong> <a href="tel:+5533999571591">(33) 99957-1591</a></p>
+            <p><strong>Email:</strong> <a href="mailto:radionativadeentrefolhas@gmail.com">radionativadeentrefolhas@gmail.com</a></p>
+            <p><strong>Endereço:</strong> Rua José Garcia de Andrade, 400 - Entre Folhas, MG</p>
+        </div>
+    </section>
 
-        // Cálculo de RMS para VU Meter real
-        function getRMS(analyser) {
-            const data = new Float32Array(analyser.fftSize);
-            analyser.getFloatTimeDomainData(data);
-            let sum = 0;
-            for (let i = 0; i < data.length; i++) {
-                sum += data[i] * data[i];
-            }
-            const rms = Math.sqrt(sum / data.length);
-            // Multiplicador ajustado para dar visibilidade na barra (0-100%)
-            return Math.min(100, rms * 350); 
-        }
+    <!-- Rodapé -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="logo.png" alt="Nativa FM" class="footer-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="footer-logo-fallback" style="display:none;">
+                    <span>📻 Nativa FM 98.7</span>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>© 1996–2026 Associação Comunitária Entrefolhense de Radiodifusão</p>
+                <p>CNPJ 03.077.711/0001-52 • Entre Folhas – MG</p>
+            </div>
+            <div class="footer-links">
+                <a href="#hero">Início</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#contato">Contato</a>
+                <a href="#radiosnet">App</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Desenvolvido com ❤️ para a comunidade de Entre Folhas</p>
+        </div>
+    </footer>
 
-        // Loop de Renderização (Equalizador Fundo + VU Meters)
-        function visualize() {
-            animationId = requestAnimationFrame(visualize);
+    <audio id="radioStream" crossorigin="anonymous" preload="auto"></audio>
 
-            if (audio.paused || audio.muted) {
-                // Decay visual suave se parado/mutado
-                vuL.style.width = '0%';
-                vuR.style.width = '0%';
-                ctxBg.clearRect(0, 0, canvasBg.width, canvasBg.height);
-                return;
-            }
-
-            // 1. Atualiza VU Meters
-            const volL = getRMS(analyserL);
-            const volR = getRMS(analyserR);
-            vuL.style.width = volL + '%';
-            vuR.style.width = volR + '%';
-
-            // 2. Atualiza Equalizador de Fundo (FFT)
-            const bufferLength = analyserFFT.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            analyserFFT.getByteFrequencyData(dataArray);
-
-            ctxBg.clearRect(0, 0, canvasBg.width, canvasBg.height);
-            
-            // Desenho do Equalizador no fundo da tela (Lado a lado, cobrindo largura total)
-            const barWidth = (canvasBg.width / bufferLength) * 2.5; 
-            let x = 0;
-
-            for (let i = 0; i < bufferLength; i++) {
-                // Altura da barra baseada na amplitude
-                const barHeight = (dataArray[i] / 255) * (canvasBg.height * 0.8);
-
-                // Gradiente verde para azul
-                const gradient = ctxBg.createLinearGradient(0, canvasBg.height, 0, canvasBg.height - barHeight);
-                gradient.addColorStop(0, '#00ff88');
-                gradient.addColorStop(1, '#00b8ff');
-
-                ctxBg.fillStyle = gradient;
-                ctxBg.fillRect(x, canvasBg.height - barHeight, barWidth - 1, barHeight);
-
-                x += barWidth;
-            }
-        }
-
-        // Lógica de Player (Play/Pause)
-        function togglePlay() {
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            if (audio.paused) {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    updateBtnUI(true);
-                }).catch(e => console.log('Erro ao dar play', e));
-            } else {
-                audio.pause();
-                isPlaying = false;
-                updateBtnUI(false);
-            }
-        }
-
-        function updateBtnUI(playing) {
-            if (playing) {
-                btnPlay.classList.add('playing');
-                iconPlay.style.display = 'none';
-                iconPause.style.display = 'block';
-            } else {
-                btnPlay.classList.remove('playing');
-                iconPlay.style.display = 'block';
-                iconPause.style.display = 'none';
-            }
-        }
-
-        btnPlay.addEventListener('click', (e) => {
-            e.stopPropagation(); // Previne disparo do unlock global
-            initAudioEngine();
-            audio.muted = false; // Garante que desmute ao clicar no play
-            togglePlay();
-        });
-
-        // 🔊 AUTOPLAY INTELIGENTE & DESBLOQUEIO GLOBAL
-        const globalUnlock = () => {
-            initAudioEngine();
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            
-            // Remove o mute e toca se não estiver tocando
-            if (audio.muted) {
-                audio.muted = false;
-                if (!isPlaying) {
-                    audio.play().then(() => {
-                        isPlaying = true;
-                        updateBtnUI(true);
-                    }).catch(() => {});
-                }
-            }
-
-            // Remove os listeners após o primeiro toque do usuário na tela
-            document.removeEventListener('click', globalUnlock);
-            document.removeEventListener('touchstart', globalUnlock);
-            document.removeEventListener('keydown', globalUnlock);
-        };
-
-        // Escuta qualquer interação no documento para liberar o áudio web
-        document.addEventListener('click', globalUnlock);
-        document.addEventListener('touchstart', globalUnlock);
-        document.addEventListener('keydown', globalUnlock);
-
-        // Tenta autoplay mutado no carregamento
-        window.addEventListener('load', () => {
-            audio.play().then(() => {
-                isPlaying = true;
-                updateBtnUI(true);
-                // Está tocando, porém mutado. Aguardando o usuário interagir para desmutar (globalUnlock).
-            }).catch(e => {
-                console.log("Autoplay bloqueado pelo navegador. Aguardando interação do usuário.");
-            });
-        });
-
-        // 📡 METADADOS EM TEMPO REAL (ZENO SSE)
-        function connectMetadata() {
-            const evtSource = new EventSource(METADATA_URL);
-            
-            evtSource.onmessage = function(event) {
-                try {
-                    const data = JSON.parse(event.data);
-                    const streamTitle = data.streamTitle || '';
-                    
-                    if (!streamTitle || streamTitle === '') {
-                        titleEl.textContent = 'Nativa FM';
-                        artistEl.textContent = 'O amor de Entre Folhas';
-                        return;
-                    }
-
-                    // Tenta separar Artista - Música
-                    if (streamTitle.includes(' - ')) {
-                        const parts = streamTitle.split(' - ');
-                        artistEl.textContent = parts[0].trim();
-                        titleEl.textContent = parts.slice(1).join(' - ').trim();
-                    } else {
-                        titleEl.textContent = streamTitle;
-                        artistEl.textContent = 'Nativa FM';
-                    }
-                } catch (error) {
-                    console.error('Erro ao processar metadata', error);
-                }
-            };
-
-            evtSource.onerror = function() {
-                console.log('Tentando reconectar metadados...');
-                evtSource.close();
-                setTimeout(connectMetadata, 5000); // Retry automático
-            };
-        }
-
-        // Inicia a captura de metadados
-        connectMetadata();
-
-        // Retries e gerenciamento de rede (Reconexão da stream)
-        audio.addEventListener('error', () => {
-            if(isPlaying) {
-                setTimeout(() => {
-                    audio.src = STREAM_URL + '?t=' + Date.now();
-                    audio.play().catch(e=>console.log(e));
-                }, 3000);
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
